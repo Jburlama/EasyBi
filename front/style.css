@@ -1,0 +1,47 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: linear-gradient(135deg, #afafaf 0%, #ffffff 100%);
+    color: #000000;
+    overflow-x: hidden;
+}
+
+#container {
+    display: flex;
+    min-height: 100vh;
+}
+
+#navbar {
+    border: 1px solid black;
+    min-height: 100vh;
+    min-width: 40vh;
+}
+
+#logo {
+    margin: 20px;
+}
+
+#navbuttons {
+    font-size: 20px;
+}
+
+.button {
+    cursor: pointer;
+    padding: 25px;
+}
+
+.button:hover {
+    background: rgba(0, 0, 0, 0.1);
+    color: #ffffff;
+}
+
+.button.active {
+    background: linear-gradient(135deg, rgba(50, 50, 50, 1) 0%, rgba(100, 100, 100, 0.5) 100%);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
