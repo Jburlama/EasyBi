@@ -1,37 +1,6 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    background: linear-gradient(135deg, #afafaf 0%, #ffffff 100%);
-    color: #000000;
-    overflow-x: hidden;
-}
-
-#container {
-    display: flex;
-    min-height: 100vh;
-}
-
-#navbar {
-    border: 1px solid black;
-    min-height: 100vh;
-    min-width: 20vh;
-}
-
-#logo {
-    margin: 20px;
-}
-
-#navbuttons {
-    font-size: 20px;
-}
 
 .integrações {
-    border: 2px solid red;
+    /* border: 2px solid red; */
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -49,41 +18,41 @@ body {
 
 .integração-nav {
     display: flex;
-    border: 2px solid green;
+    /* border: 2px solid green; */
     margin: 10px 50px 0px 50px;
     height: 75px;
 }
 
-.integração-btn {
+.integração-criar-btn {
+    background: black;
+    color: white;
+    display: flex;
+    flex-wrap: nowrap;
     border: 2px solid black;
     width: 200px;
-    height: 50px;
-    margin: 10px 0px 10px 77px;
+    height: 60px;
+    margin: 5px 0px 10px 77px;
     padding: 10px;
 }
 
 .integração-search {
-    border: 2px solid black;
-    width: 200px;
-    height: 50px;
+    /* border: 2px solid black; */
     position: relative;
     left: 65%;
-    margin: 10px 0px 10px 0px;
+    margin: 10px 0px 10px -60px;
     padding: 10px;
+    display: flex;
+    flex-wrap: nowrap;
 }
 
-.button {
+.integração-input-search {
+    height: 25px;
+    padding: 5px;
+}
+
+.integração-search-btn {
+    width: 50px;
+    height: 25px;
+    background: black;
     cursor: pointer;
-    padding: 25px;
-}
-
-.button:hover {
-    background: rgba(0, 0, 0, 0.1);
-    color: #ffffff;
-}
-
-.button.active {
-    background: linear-gradient(135deg, rgba(50, 50, 50, 1) 0%, rgba(100, 100, 100, 0.5) 100%);
-    color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.1);
 }
