@@ -3,19 +3,56 @@ main();
 function main() {
     const container = new Container();
     const navBar = new NavBar();
+    const vertLine = new VertLine();
+    const integration = new Integration();
 
-    const line = document.createElement("div");
-    line.setAttribute("id", "navline");
-    Object.assign(line.style, {
-        border: "1px solid black",
-        height: "100vh",
-        width: "0.1px",
-    })
-
-    container.element.appendChild(navBar.element)
-    container.element.appendChild(line);
+    container.element.appendChild(navBar.element);
+    container.element.appendChild(vertLine.element);
+    container.element.appendChild(integration.element);
 }
 
+function Integration() {
+    this.element = document.createElement("div");
+    this.element.setAttribute("id", "integration")
+
+    Object.assign(this.element.style, {
+        border: "1px solid black",
+        width: "100%",
+        height: "100vh",
+    });
+
+    this.navIntegration = document.createElement("div");
+    this.navIntegration.setAttribute("id", "navintegration")
+
+    Object.assign(this.navIntegration.style, {
+        border: "1px solid black",
+        width: "100%",
+        height: "80px",
+    });
+
+    this.createIntegrationBtn = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    this.createIntegrationBtn.id = "create-integration-btn";
+    this.createIntegrationBtn.style.width  = "150px"
+    this.createIntegrationBtn.style.height = "30px"
+    this.createIntegrationBtn.style.border = "2px solid black";
+    this.createIntegrationBtn.style.borderRadius = "15px";
+    this.createIntegrationBtn.style.margin = "20px 0px 0px 70px";
+    this.createIntegrationBtn.style.background = "black";
+
+    this.element.appendChild(this.navIntegration);
+    this.navIntegration.appendChild(this.createIntegrationBtn);
+}
+
+
+
+function VertLine() {
+    this.element = document.createElement("div");
+    Object.assign(this.element.style, {
+        border: "1px solid black",
+        height: "100vh",
+        width: "0",
+    })
+}
 
 function NavBar() {
     this.element = document.createElement("div");
