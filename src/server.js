@@ -8,11 +8,10 @@ fastify.register(require("@fastify/static"), {
 });
 
 
-// Declare route
+// Declare route - updated path to index.html
 fastify.get("/", async (request, reply) => {
-    return reply.sendFile("index.html");
+    return reply.sendFile("html/index.html");  // Updated path
 });
-
 
 // Start server
 const start = async () => {
