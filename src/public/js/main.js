@@ -98,8 +98,6 @@ function NavBar() {
 
     this.container.appendChild(this.logo);
     this.container.appendChild(this.navBtns);
-
-    const container = document.querySelector("#container");
 }
 
 

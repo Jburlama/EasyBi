@@ -193,9 +193,6 @@ function NavIntegration() {
     this.container.style.justifyContent = "space-between";
     this.container.style.padding = "0 40px";
     this.container.style.boxSizing = "border-box";
-    
-    // Create a container for both elements to manage their layout
-    this.container = document.createElement("div");
     this.container.style.display = "flex";
     this.container.style.alignItems = "center";
     this.container.style.gap = "50px"; // Space between button and search
