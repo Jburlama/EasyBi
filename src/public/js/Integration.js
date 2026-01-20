@@ -109,7 +109,7 @@ function CreateIntegrationBtn() {
     this.createIntegrationBtn = document.createElement("button");
     this.createIntegrationBtn.id = "create-integration-btn";
     this.createIntegrationBtn.style.height = "45px";
-    this.createIntegrationBtn.style.borderRadius = "20px";
+    this.createIntegrationBtn.style.borderRadius = "25px";
     this.createIntegrationBtn.style.border = "none";
     this.createIntegrationBtn.style.cursor = "pointer";
     this.createIntegrationBtn.style.display = "flex";
@@ -124,6 +124,9 @@ function CreateIntegrationBtn() {
     this.createIntegrationBtn.style.transition = "all 0.3s ease";
     this.createIntegrationBtn.style.overflow = "hidden"; // Esconde texto quando encolhe
     this.createIntegrationBtn.style.background = "linear-gradient(135deg, rgba(0, 0, 0, 1) 0%, rgba(100, 100, 100, 1) 90%)";
+    this.createIntegrationBtn.style.minWidth = "45px";
+    this.createIntegrationBtn.style.width = "auto";
+    this.createIntegrationBtn.style.position = "relative";
     this.container.appendChild(this.createIntegrationBtn)
 
     // Create SVG for plus sign
@@ -132,7 +135,7 @@ function CreateIntegrationBtn() {
     this.plusSvg.setAttribute("height", "20");
     this.plusSvg.setAttribute("viewBox", "0 0 24 24");
     this.plusSvg.style.flexShrink = "0";
-    this.plusSvg.style.padding = "10px";
+    this.plusSvg.style.padding = "0 12px";
     this.createIntegrationBtn.appendChild(this.plusSvg);
 
     // Create plus sign path
@@ -151,7 +154,41 @@ function CreateIntegrationBtn() {
     this.btnText.style.whiteSpace = "nowrap";
     this.btnText.style.transition = "opacity 0.3s ease, max-width 0.3s ease";
     this.btnText.style.opacity = "1";
-    this.btnText.style.maxWidth = "200px"; // Para animação suave
-    this.btnText.style.padding = "10px";
+    this.btnText.style.maxWidth = "200px";
+    this.btnText.style.padding = "0 20px 0 0";
     this.createIntegrationBtn.appendChild(this.btnText)
+
+    this.updateButtonState = updateButtonState;
+
+
+    // Add responsive behavior
+    window.addEventListener("resize", () => this.updateButtonState());
+}
+
+function updateButtonState() {
+    // Function to update button state based on container width
+    const container = this.container.parentElement;
+    if (!container) return;
+
+    const containerWidth = container.offsetWidth;
+    const isCollapsed = containerWidth < 600; // Adjust breakpoint as needed
+
+    if (isCollapsed) {
+        // Collapsed state: hide text, show only icon
+        this.btnText.style.opacity = "0";
+        this.btnText.style.maxWidth = "0";
+        this.btnText.style.padding = "0";
+        this.createIntegrationBtn.style.padding = "0"; // Remove padding when collapsed
+        this.createIntegrationBtn.style.borderRadius = "50%"; // Make it circular
+        this.createIntegrationBtn.style.width = "45px"; // Fixed width for circle
+    }
+    else {
+        // Expanded state: show text
+        this.btnText.style.opacity = "1";
+        this.btnText.style.maxWidth = "200px";
+        this.btnText.style.padding = "0 20px 0 0";
+        this.createIntegrationBtn.style.padding = "0"; // No padding, handled by children
+        this.createIntegrationBtn.style.borderRadius = "25px"; // Pill shape
+        this.createIntegrationBtn.style.width = "auto"; // Auto width
+    }
 }
