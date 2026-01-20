@@ -9,6 +9,177 @@ function Integration() {
 
     this.NavIntegration = new NavIntegration();
     this.container.appendChild(this.NavIntegration.container);
+
+    this.NavSepLine = new NavSepLine();
+    this.container.appendChild(this.NavSepLine.container)
+
+    this.IntegrationsDisplay = new IntegrationsDisplay();
+    this.container.appendChild(this.IntegrationsDisplay.container);
+}
+
+
+function IntegrationsDisplay() {
+    this.container = document.createElement("div");
+    this.container.id = "integrations-display";
+    
+    // Style the container
+    this.container.style.width = "100%";
+    this.container.style.height = "calc(100vh - 120px)"; // Account for nav and separator
+    this.container.style.display = "flex";
+    this.container.style.flexDirection = "column";
+    this.container.style.alignItems = "center";
+    this.container.style.justifyContent = "center";
+    this.container.style.padding = "40px";
+    this.container.style.boxSizing = "border-box";
+    this.container.style.overflowY = "auto";
+    
+    // Create the empty state message
+    this.createEmptyState();
+}
+
+IntegrationsDisplay.prototype.createEmptyState = function() {
+    // Clear container first
+    this.container.innerHTML = "";
+    
+    // Create main message container
+    const messageContainer = document.createElement("div");
+    messageContainer.style.display = "flex";
+    messageContainer.style.flexDirection = "column";
+    messageContainer.style.alignItems = "center";
+    messageContainer.style.justifyContent = "center";
+    messageContainer.style.textAlign = "center";
+    messageContainer.style.maxWidth = "600px";
+    messageContainer.style.padding = "40px";
+    messageContainer.style.borderRadius = "20px";
+    messageContainer.style.background = "linear-gradient(135deg, rgba(30, 30, 30, 0.1) 0%, rgba(50, 50, 50, 0.05) 100%)";
+    messageContainer.style.boxShadow = "0 4px 20px rgba(0, 0, 0, 0.1)";
+    
+    // Create icon/svg
+    const iconSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    iconSvg.setAttribute("width", "80");
+    iconSvg.setAttribute("height", "80");
+    iconSvg.setAttribute("viewBox", "0 0 24 24");
+    iconSvg.setAttribute("fill", "none");
+    iconSvg.style.marginBottom = "30px";
+    iconSvg.style.opacity = "0.7";
+    
+    // Create paths for connection/database icon
+    const path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path1.setAttribute("d", "M4 18V8C4 6.89543 4.89543 6 6 6H18C19.1046 6 20 6.89543 20 8V18C20 19.1046 19.1046 20 18 20H6C4.89543 20 4 19.1046 4 18Z");
+    path1.setAttribute("stroke", "#ffffff");
+    path1.setAttribute("stroke-width", "1.5");
+    path1.setAttribute("stroke-linecap", "round");
+    path1.setAttribute("stroke-linejoin", "round");
+    
+    const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path2.setAttribute("d", "M8 6V4C8 2.89543 8.89543 2 10 2H14C15.1046 2 16 2.89543 16 4V6");
+    path2.setAttribute("stroke", "#ffffff");
+    path2.setAttribute("stroke-width", "1.5");
+    path2.setAttribute("stroke-linecap", "round");
+    path2.setAttribute("stroke-linejoin", "round");
+    
+    const path3 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path3.setAttribute("d", "M12 10V14");
+    path3.setAttribute("stroke", "#ffffff");
+    path3.setAttribute("stroke-width", "1.5");
+    path3.setAttribute("stroke-linecap", "round");
+    
+    const path4 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    path4.setAttribute("d", "M8 14H16");
+    path4.setAttribute("stroke", "#ffffff");
+    path4.setAttribute("stroke-width", "1.5");
+    path4.setAttribute("stroke-linecap", "round");
+    
+    iconSvg.appendChild(path1);
+    iconSvg.appendChild(path2);
+    iconSvg.appendChild(path3);
+    iconSvg.appendChild(path4);
+    
+    // Create title
+    const title = document.createElement("h2");
+    title.textContent = "Nenhuma Integração Configurada";
+    title.style.color = "#ffffff";
+    title.style.fontFamily = "Arial, sans-serif";
+    title.style.fontSize = "28px";
+    title.style.fontWeight = "600";
+    title.style.marginBottom = "15px";
+    
+    
+    // Add all elements to message container
+    messageContainer.appendChild(iconSvg);
+    messageContainer.appendChild(title);
+    
+    // Add message container to main container
+    this.container.appendChild(messageContainer);
+    
+    // Store reference for future updates
+    this.messageContainer = messageContainer;
+};
+
+// Method to update display when integrations are added
+IntegrationsDisplay.prototype.updateDisplay = function(integrations) {
+    if (integrations && integrations.length > 0) {
+        // Show integrations list
+        this.showIntegrationsList(integrations);
+    } else {
+        // Show empty state
+        this.createEmptyState();
+    }
+};
+
+// Method to show integrations list (placeholder for future implementation)
+IntegrationsDisplay.prototype.showIntegrationsList = function(integrations) {
+    // Clear container
+    this.container.innerHTML = "";
+    
+    // Create header
+    const header = document.createElement("div");
+    header.style.padding = "20px";
+    header.style.borderBottom = "1px solid rgba(255, 255, 255, 0.1)";
+    
+    const headerTitle = document.createElement("h2");
+    headerTitle.textContent = `Integrações (${integrations.length})`;
+    headerTitle.style.color = "#ffffff";
+    headerTitle.style.fontFamily = "Arial, sans-serif";
+    headerTitle.style.margin = "0";
+    
+    header.appendChild(headerTitle);
+    this.container.appendChild(header);
+    
+    // Create integrations grid/list
+    const integrationsGrid = document.createElement("div");
+    integrationsGrid.style.display = "grid";
+    integrationsGrid.style.gridTemplateColumns = "repeat(auto-fill, minmax(300px, 1fr))";
+    integrationsGrid.style.gap = "20px";
+    integrationsGrid.style.padding = "20px";
+    
+    // Add integration cards (placeholder)
+    integrations.forEach((integration, index) => {
+        const card = document.createElement("div");
+        card.style.background = "linear-gradient(135deg, rgba(40, 40, 40, 0.5) 0%, rgba(60, 60, 60, 0.3) 100%)";
+        card.style.borderRadius = "10px";
+        card.style.padding = "20px";
+        card.style.border = "1px solid rgba(255, 255, 255, 0.1)";
+        
+        const cardTitle = document.createElement("h3");
+        cardTitle.textContent = integration.name || `Integração ${index + 1}`;
+        cardTitle.style.color = "#ffffff";
+        cardTitle.style.fontFamily = "Arial, sans-serif";
+        cardTitle.style.marginTop = "0";
+        
+        card.appendChild(cardTitle);
+        integrationsGrid.appendChild(card);
+    });
+    
+    this.container.appendChild(integrationsGrid);
+};
+
+function NavSepLine() {
+    this.container = document.createElement("div");
+
+    this.container.style.border = "1px solid black";
+    this.container.style.height = "0";
+    this.container.style.width = "100%";
 }
 
 function NavIntegration() {
@@ -22,7 +193,6 @@ function NavIntegration() {
     this.container.style.justifyContent = "space-between";
     this.container.style.padding = "0 40px";
     this.container.style.boxSizing = "border-box";
-    // this.container.style.border = "1px solid black";
     
     // Create a container for both elements to manage their layout
     this.container = document.createElement("div");
@@ -175,6 +345,13 @@ function SearchIntegration() {
     searchPath.setAttribute("stroke-linecap", "round");
     searchPath.setAttribute("stroke-linejoin", "round");
     searchSvg.appendChild(searchPath);
+
+    this.searchButton.addEventListener("mouseenter", () => {
+        this.searchButton.style.background = "linear-gradient(135deg, rgba(50, 50, 50, 1) 0%, rgba(90, 90, 90, 0.5) 20%)";
+    })
+    this.searchButton.addEventListener("mouseleave", () => {
+        this.searchButton.style.background = "linear-gradient(135deg, rgba(90, 90, 90, 0.5) 0%, rgba(50, 50, 50, 1) 20%)";
+    })
 }
 
 function CreateIntegrationBtn() {
@@ -237,6 +414,14 @@ function CreateIntegrationBtn() {
     this.btnText.style.maxWidth = "200px";
     this.btnText.style.padding = "0 20px 0 0";
     this.createIntegrationBtn.appendChild(this.btnText);
+
+
+    this.container.addEventListener("mouseenter", () => {
+        this.createIntegrationBtn.style.background = "linear-gradient(135deg, rgba(100, 100, 100, 1) 0%, rgba(0, 0, 0, 1) 90%)";
+    })
+    this.container.addEventListener("mouseleave", () => {
+        this.createIntegrationBtn.style.background = "linear-gradient(135deg, rgba(0, 0, 0, 1) 0%, rgba(100, 100, 100, 1) 90%)";
+    })
 }
 
 // Add collapse and expand methods to CreateIntegrationBtn prototype
