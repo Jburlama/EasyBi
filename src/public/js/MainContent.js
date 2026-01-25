@@ -9,7 +9,7 @@ class MainContent {
         this.container.style.width = "100%";
         this.container.style.height = "100vh";
         this.container.style.overflowX = "hidden";
-        this.container.style.border = "1px solid red"
+        // this.container.style.border = "1px solid red"
 
         this.integration = new Integration();
         this.createIntegration = new CreateIntegrationPage();

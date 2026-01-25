@@ -2,46 +2,173 @@ class Integration {
     constructor() {
         this.container = document.createElement("div");
         this.container.id = "integration";
-
-        // this.container.style.border = "1px solid black";
         this.container.style.width = "100%";
         this.container.style.height = "100vh";
         this.container.style.overflowX = "hidden";
+        // this.container.style.border = "1px solid black";
 
-        this.IntegrationHeader = new IntegrationHeader();
-        this.container.appendChild(this.IntegrationHeader.container);
-
-        this.NavSepLine = new NavSepLine();
-        this.container.appendChild(this.NavSepLine.container)
-
-        this.IntegrationsDisplay = new IntegrationsDisplay();
-        this.container.appendChild(this.IntegrationsDisplay.container);
-    }
-}
-
-class IntegrationsDisplay {
-    constructor() {
-        this.container = document.createElement("div");
-        this.container.id = "integrations-display";
-
-        // Style the container
-        this.container.style.width = "100%";
-        this.container.style.height = "calc(100vh - 120px)"; // Account for nav and separator
-        this.container.style.display = "flex";
-        this.container.style.flexDirection = "column";
-        this.container.style.alignItems = "center";
-        this.container.style.justifyContent = "center";
-        this.container.style.padding = "40px";
-        this.container.style.boxSizing = "border-box";
-        this.container.style.overflowY = "auto";
-
-        // // Create the empty state message
-        this.createEmptyState();
+        this.#integrationHeader();
+        this.#mainContentDisplay();
     }
 
-    createEmptyState = () => {
+    #integrationHeader = () => {
+        // Integration NavBar
+        this.headerContainer = document.createElement("div");
+        this.headerContainer.id = "Integration-header";
+        this.headerContainer.style.width = "100%";
+        this.headerContainer.style.height = "80px";
+        this.headerContainer.style.display = "flex";
+        this.headerContainer.style.alignItems = "center";
+        this.headerContainer.style.justifyContent = "space-between";
+        this.headerContainer.style.padding = "0 40px";
+        this.headerContainer.style.boxSizing = "border-box";
+        this.headerContainer.style.display = "flex";
+        this.headerContainer.style.alignItems = "center";
+        this.headerContainer.style.gap = "50px"; // Space between button and search
+        this.headerContainer.style.width = "100%";
+        this.headerContainer.style.justifyContent = "space-between";
+        this.headerContainer.style.flexWrap = "nowrap"; // Allow wrapping if needed
+        this.headerContainer.style.minHeight = "80px"; // Ensure consistent height
+        this.headerContainer.style.marginLeft = "10px";
+        this.headerContainer.style.marginRight = "10px";
+        this.headerContainer.style.overflowX = "hidden";
+
+
+        this.#createIntegrationBtnDisplay();
+        this.#searchIntegrationDisplay();
+
+        this.container.appendChild(this.headerContainer);
+
+        this.#setupResponsiveResize();
+        this.#headerSepLine();
+    }
+
+    #setupResponsiveResize = () => {
+        this.#updateLayout()
+
+        // Update on resize
+        const resizeObserver = new ResizeObserver(() => {
+            this.#updateLayout();
+        });
+        resizeObserver.observe(this.container);
+    }
+
+    #updateLayout = () => {
+        // Creates a responsive layout system for the Integration header that contains:
+        //     A "Criar Integração" button
+        //     A search input field
+        // When the container width changes, adjust the elements to fit:
+        //     On large screens: Show full button text and full search width
+        //     On medium screens: Keep button text, shrink search bar
+        //     On small screens: Collapse button to icon-only, shrink search bar more
+        //     On very small screens: Change search placeholder to shorter text
+        //     Also adjust the gap between button and search as screen shrinks
+        // Breakpoints:
+        //     Full size: > 400px available space
+        //     Medium: 300-400px available space
+        //     Small: < 300px available space
+        //     Very small: < 200px available space
+
+        const containerWidth = this.container.offsetWidth;
+        const buttonWidth = this.createIntegrationBtn.offsetWidth;
+        const searchWidth = 320; // Natural width of search
+
+        // Calculate available space for search after button and gaps
+        const availableSpace = containerWidth - buttonWidth - 20 - 80; // 20px gap, 80px padding
+
+        // Set default gap
+        let newGap = 50; // Default gap as defined in header
+
+        if (availableSpace < searchWidth) {
+            // Not enough space for full search width
+            const newSearchWidth = Math.max(200, availableSpace); // Minimum 200px width
+
+            if (newSearchWidth > 200) {
+                // Scale down search proportionally
+                this.searchContainer.style.width = newSearchWidth + "px";
+                this.searchInput.style.width = "calc(100% - 50px)";
+                
+                // Calculate gap based on available space reduction
+                // Gap reduces from 50px to 10px as available space reduces from searchWidth to 200px
+                const spaceReduction = searchWidth - availableSpace;
+                const maxSpaceReduction = searchWidth - 200;
+                const gapReduction = (spaceReduction / maxSpaceReduction) * 40; // Reduce up to 40px (from 50 to 10)
+                newGap = Math.max(10, 50 - gapReduction);
+            } 
+            else {
+                // Very small - collapse search to minimal
+                this.searchContainer.style.width = "150px";
+                this.searchInput.style.width = "calc(100% - 50px)";
+                this.searchInput.placeholder = "Buscar...";
+                
+                // Minimal gap for very small screens (but not less than 5px)
+                newGap = Math.max(5, 10 - (200 - newSearchWidth) / 10);
+            }
+
+            // Also make button responsive based on available space
+            if (availableSpace < 300) {
+                this.#createIntegrationBtnColapse();
+                // When button is collapsed, use smaller gap
+                newGap = Math.max(10, newGap * 0.7); // Reduce gap further when button is icon-only
+            } 
+            else {
+                this.#createIntegrationBtnExpand();
+            }
+        } 
+        else {
+            // Enough space - use natural sizes
+            this.searchContainer.style.width = "320px";
+            this.searchInput.style.width = "calc(100% - 50px)";
+            this.searchInput.placeholder = "Buscar integrações...";
+
+            if (availableSpace > 400) {
+                this.#createIntegrationBtnExpand();
+                newGap = 50; // Full gap
+            } else {
+                // Medium screens - slightly reduce gap
+                newGap = 40;
+            }
+        }
+        
+        // Apply the calculated gap
+        this.headerContainer.style.gap = newGap + "px";
+        
+        // Ensure search container margin is also adjusted
+        this.searchContainer.style.marginRight = Math.max(5, newGap * 0.5) + "px";
+    }
+
+
+    #headerSepLine = () => {
+        this.setLineContainer = document.createElement("div");
+        this.setLineContainer.style.height = "0";
+        this.setLineContainer.style.width = "100%";
+        this.setLineContainer.style.border = "1px solid black";
+
+        this.container.appendChild(this.setLineContainer);
+    }
+
+
+    #mainContentDisplay = () => {
+        this.integrationContainer = document.createElement("div");
+        this.integrationContainer.id = "mainContent";
+        this.integrationContainer.style.width = "100%";
+        this.integrationContainer.style.height = "calc(100vh - 120px)"; // Account for nav and separator
+        this.integrationContainer.style.display = "flex";
+        this.integrationContainer.style.flexDirection = "column";
+        this.integrationContainer.style.alignItems = "center";
+        this.integrationContainer.style.justifyContent = "center";
+        this.integrationContainer.style.padding = "40px";
+        this.integrationContainer.style.boxSizing = "border-box";
+        this.integrationContainer.style.overflowY = "auto";
+
+        this.#emptyIntegrations();
+
+        this.container.appendChild(this.integrationContainer);
+    }
+
+    #emptyIntegrations = () => {
         // Clear container first
-        this.container.innerHTML = "";
+        this.integrationContainer.innerHTML = "";
 
         // Create main message container
         const messageContainer = document.createElement("div");
@@ -106,207 +233,29 @@ class IntegrationsDisplay {
         title.style.fontWeight = "600";
         title.style.marginBottom = "15px";
 
-
         // Add all elements to message container
         messageContainer.appendChild(iconSvg);
         messageContainer.appendChild(title);
 
-        // Add message container to main container
-        this.container.appendChild(messageContainer);
-
-        // Store reference for future updates
-        this.messageContainer = messageContainer;
-    };
-
-    // Method to update display when integrations are added
-    updateDisplay = (integrations) => {
-        if (integrations && integrations.length > 0) {
-            // Show integrations list
-            this.showIntegrationsList(integrations);
-        }
-        else {
-            // Show empty state
-            this.createEmptyState();
-        }
-    };
-
-
-    // Method to show integrations list (placeholder for future implementation)
-    showIntegrationsList = (integrations) => {
-        // Clear container
-        this.container.innerHTML = "";
-
-        // Create header
-        const header = document.createElement("div");
-        header.style.padding = "20px";
-        header.style.borderBottom = "1px solid rgba(255, 255, 255, 0.1)";
-
-        const headerTitle = document.createElement("h2");
-        headerTitle.textContent = `Integrações (${integrations.length})`;
-        headerTitle.style.color = "#ffffff";
-        headerTitle.style.fontFamily = "Arial, sans-serif";
-        headerTitle.style.margin = "0";
-
-        header.appendChild(headerTitle);
-        this.container.appendChild(header);
-
-        // Create integrations grid/list
-        const integrationsGrid = document.createElement("div");
-        integrationsGrid.style.display = "grid";
-        integrationsGrid.style.gridTemplateColumns = "repeat(auto-fill, minmax(300px, 1fr))";
-        integrationsGrid.style.gap = "20px";
-        integrationsGrid.style.padding = "20px";
-
-        // Add integration cards (placeholder)
-        integrations.forEach((integration, index) => {
-            const card = document.createElement("div");
-            card.style.background = "linear-gradient(135deg, rgba(40, 40, 40, 0.5) 0%, rgba(60, 60, 60, 0.3) 100%)";
-            card.style.borderRadius = "10px";
-            card.style.padding = "20px";
-            card.style.border = "1px solid rgba(255, 255, 255, 0.1)";
-
-            const cardTitle = document.createElement("h3");
-            cardTitle.textContent = integration.name || `Integração ${index + 1}`;
-            cardTitle.style.color = "#ffffff";
-            cardTitle.style.fontFamily = "Arial, sans-serif";
-            cardTitle.style.marginTop = "0";
-
-            card.appendChild(cardTitle);
-            integrationsGrid.appendChild(card);
-        });
-
-        this.container.appendChild(integrationsGrid);
-    };
-}
-
-class NavSepLine {
-    constructor() {
-        this.container = document.createElement("div");
-
-        this.container.style.border = "1px solid black";
-        this.container.style.height = "0";
-        this.container.style.width = "100%";
-    }
-}
-
-class IntegrationHeader {
-    constructor() {
-        // Integration NavBar
-        this.container = document.createElement("div");
-        this.container.id = "Integration-header";
-        this.container.style.width = "100%";
-        this.container.style.height = "80px";
-        this.container.style.display = "flex";
-        this.container.style.alignItems = "center";
-        this.container.style.justifyContent = "space-between";
-        this.container.style.padding = "0 40px";
-        this.container.style.boxSizing = "border-box";
-        this.container.style.display = "flex";
-        this.container.style.alignItems = "center";
-        this.container.style.gap = "50px"; // Space between button and search
-        this.container.style.width = "100%";
-        this.container.style.justifyContent = "space-between";
-        this.container.style.flexWrap = "nowrap"; // Allow wrapping if needed
-        this.container.style.minHeight = "80px"; // Ensure consistent height
-        this.container.style.marginLeft = "10px";
-        this.container.style.marginRight = "10px";
-        this.container.style.overflowX = "hidden";
-
-
-        this.createIntegrationBtn = new CreateIntegrationBtn();
-        this.searchIntegration = new SearchIntegration();
-
-        // Add both to controls container
-        this.container.appendChild(this.createIntegrationBtn.container);
-        this.container.appendChild(this.searchIntegration.container);
-
-        // Setup responsive behavior
-        this.setupResponsiveBehavior();
+        this.integrationContainer.appendChild(messageContainer);
     }
 
-    // Add responsive behavior to NavIntegration
-    setupResponsiveBehavior = () => {
-        const self = this;
-
-        this.updateLayout = function() {
-            const containerWidth = this.container.offsetWidth;
-            const buttonWidth = self.createIntegrationBtn.container.offsetWidth;
-            const searchWidth = 320; // Natural width of search
-
-            // Available space for search after button and gaps
-            const availableSpace = containerWidth - buttonWidth - 20 - 80; // 20px gap, 80px padding
-
-            if (availableSpace < searchWidth) {
-                // Not enough space for full search width
-                const newSearchWidth = Math.max(200, availableSpace); // Minimum 200px width
-
-                if (newSearchWidth > 200) {
-                    // Scale down search proportionally
-                    self.searchIntegration.container.style.width = newSearchWidth + "px";
-                    self.searchIntegration.searchInput.style.width = "calc(100% - 50px)";
-                } 
-                else {
-                    // Very small - collapse search to minimal
-                    self.searchIntegration.container.style.width = "150px";
-                    self.searchIntegration.searchInput.style.width = "calc(100% - 50px)";
-                    self.searchIntegration.searchInput.placeholder = "Buscar...";
-                }
-
-                // Also make button responsive based on available space
-                if (availableSpace < 300) {
-                    self.createIntegrationBtn.collapse();
-                } 
-                else {
-                    self.createIntegrationBtn.expand();
-                }
-            } 
-            else {
-                // Enough space - use natural sizes
-                self.searchIntegration.container.style.width = "320px";
-                self.searchIntegration.searchInput.style.width = "calc(100% - 50px)";
-                self.searchIntegration.searchInput.placeholder = "Buscar integrações...";
-
-                if (availableSpace > 400) {
-                    self.createIntegrationBtn.expand();
-                }
-            }
-        }.bind(this);
-
-        // Initial call
-        setTimeout(() => this.updateLayout(), 0);
-
-        // Update on resize
-        window.addEventListener("resize", () => this.updateLayout());
-
-        // Also use ResizeObserver for more accurate monitoring
-        if (typeof ResizeObserver !== 'undefined') {
-            const resizeObserver = new ResizeObserver(() => {
-                this.updateLayout();
-            });
-            resizeObserver.observe(this.container);
-        }
-    };
-}
-
-
-class SearchIntegration {
-    constructor() {
+    #searchIntegrationDisplay = () => {
         // Create search container
-        this.container = document.createElement("div");
-        this.container.style.display = "flex";
-        this.container.style.alignItems = "center";
-        this.container.style.borderRadius = "25px";
-        this.container.style.overflow = "hidden";
-        this.container.style.background = "linear-gradient(135deg, rgba(90, 90, 90, 0.5) 0%, rgba(50, 50, 50, 1) 20%)";
-
-        this.container.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.1)";
-        this.container.style.transition = "all 0.3s ease";
-        this.container.style.width = "320px";
-        this.container.style.maxWidth = "100%";
-        this.container.style.boxSizing = "border-box";
-        this.container.style.flexShrink = "1"; // Allow shrinking
-        this.container.style.minWidth = "150px"; // Minimum width
-        this.container.style.marginRight = "20px";
+        this.searchContainer = document.createElement("div");
+        this.searchContainer.style.display = "flex";
+        this.searchContainer.style.alignItems = "center";
+        this.searchContainer.style.borderRadius = "25px";
+        this.searchContainer.style.overflow = "hidden";
+        this.searchContainer.style.background = "linear-gradient(135deg, rgba(90, 90, 90, 0.5) 0%, rgba(50, 50, 50, 1) 20%)";
+        this.searchContainer.style.boxShadow = "0 2px 10px rgba(0, 0, 0, 0.1)";
+        this.searchContainer.style.transition = "all 0.3s ease";
+        this.searchContainer.style.width = "320px";
+        this.searchContainer.style.maxWidth = "100%";
+        this.searchContainer.style.boxSizing = "border-box";
+        this.searchContainer.style.flexShrink = "1"; // Allow shrinking
+        this.searchContainer.style.minWidth = "150px"; // Minimum width
+        this.searchContainer.style.marginRight = "25px";
 
         // Create search input
         this.searchInput = document.createElement("input");
@@ -323,7 +272,7 @@ class SearchIntegration {
         this.searchInput.style.outline = "none";
         this.searchInput.style.boxSizing = "border-box";
         this.searchInput.style.transition = "all 0.3s ease";
-        this.container.appendChild(this.searchInput);
+        this.searchContainer.appendChild(this.searchInput);
 
         // Create search button (magnifying glass)
         this.searchButton = document.createElement("button");
@@ -339,7 +288,7 @@ class SearchIntegration {
         this.searchButton.style.background = "linear-gradient(135deg, rgba(50, 50, 50, 1) 0%, rgba(100, 100, 100, 0.5) 100%)";
         this.searchButton.style.transition = "all 0.2s ease";
         this.searchButton.style.flexShrink = "0";
-        this.container.appendChild(this.searchButton);
+        this.searchContainer.appendChild(this.searchButton);
 
         // Create SVG for magnifying glass
         const searchSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -364,17 +313,17 @@ class SearchIntegration {
         this.searchButton.addEventListener("mouseleave", () => {
             this.searchButton.style.background = "linear-gradient(135deg, rgba(90, 90, 90, 0.5) 0%, rgba(50, 50, 50, 1) 20%)";
         })
-    }
-}
 
-class CreateIntegrationBtn {
-    constructor() {
+        this.headerContainer.appendChild(this.searchContainer)
+    }
+
+    #createIntegrationBtnDisplay = () => {
         // Container para o botão "Criar Integração"
-        this.container = document.createElement("div");
-        this.container.style.display = "flex";
-        this.container.style.alignItems = "center";
-        this.container.style.flexShrink = "0";
-        this.container.style.minWidth = "0";
+        this.createIntegrationBtnContainer = document.createElement("div");
+        this.createIntegrationBtnContainer.style.display = "flex";
+        this.createIntegrationBtnContainer.style.alignItems = "center";
+        this.createIntegrationBtnContainer.style.flexShrink = "0";
+        this.createIntegrationBtnContainer.style.minWidth = "0";
 
         // Create the "Criar Integração" button container
         this.createIntegrationBtn = document.createElement("button");
@@ -398,7 +347,7 @@ class CreateIntegrationBtn {
         this.createIntegrationBtn.style.minWidth = "45px";
         this.createIntegrationBtn.style.width = "auto";
         this.createIntegrationBtn.style.position = "relative";
-        this.container.appendChild(this.createIntegrationBtn);
+        this.headerContainer.appendChild(this.createIntegrationBtn);
 
         // Create SVG for plus sign
         this.plusSvg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -430,36 +379,37 @@ class CreateIntegrationBtn {
         this.createIntegrationBtn.appendChild(this.btnText);
 
 
-        this.container.addEventListener("mouseenter", () => {
+        this.createIntegrationBtn.addEventListener("mouseenter", () => {
             this.createIntegrationBtn.style.background = "linear-gradient(135deg, rgba(100, 100, 100, 1) 0%, rgba(0, 0, 0, 1) 90%)";
         })
-        this.container.addEventListener("mouseleave", () => {
+        this.createIntegrationBtn.addEventListener("mouseleave", () => {
             this.createIntegrationBtn.style.background = "linear-gradient(135deg, rgba(0, 0, 0, 1) 0%, rgba(100, 100, 100, 1) 90%)";
         })
 
-        // In CreateIntegrationBtn function, update the click event:
-        this.container.addEventListener("click", () => {
+        // Route to create integration page
+        this.createIntegrationBtn.addEventListener("click", () => {
             if (window.router) {
                 window.router.navigate("/criar-integracao");
-            } else {
+            }
+            else {
                 // Fallback if router isn't available
                 history.pushState({}, "", "/criar-integracao");
                 window.dispatchEvent(new PopStateEvent('popstate'));
             }
         })
+        this.headerContainer.appendChild(this.createIntegrationBtnContainer)
     }
 
-    // Add collapse and expand methods to CreateIntegrationBtn prototype
-    collapse = () => {
+    #createIntegrationBtnColapse = () => {
         this.btnText.style.opacity = "0";
         this.btnText.style.maxWidth = "0";
         this.btnText.style.padding = "0";
         this.createIntegrationBtn.style.padding = "0";
         this.createIntegrationBtn.style.borderRadius = "50%";
         this.createIntegrationBtn.style.width = "45px";
-    };
+    }
 
-    expand = () => {
+    #createIntegrationBtnExpand = () => {
         this.btnText.style.opacity = "1";
         this.btnText.style.maxWidth = "200px";
         this.btnText.style.padding = "0 20px 0 0";
@@ -468,5 +418,3 @@ class CreateIntegrationBtn {
         this.createIntegrationBtn.style.width = "auto";
     };
 }
-
-
