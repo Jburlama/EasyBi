@@ -1,24 +1,38 @@
 "use strict"
 
-function Router() {
-    this.routes = {
-        "/": window.mainContent.renderIntegration,
-        "/integracao": window.mainContent.renderIntegration,
-        "/criar-integracao": window.mainContent.renderCriarIntegration,
-    };
+class Router {
+    constructor() {
+        this.routes = {};
+        
+        window.addEventListener("popstate", (e) => {
+            this.navigate(window.location.pathname);
+        });
+    }
+    
+    registerRoutes(mainContent) {
+        this.routes = {
+            "/": mainContent.renderIntegration,
+            "/integracao": mainContent.renderIntegration,
+            "/criar-integracao": mainContent.renderCriarIntegration,
+        };
+        
+        // Now navigate to current path
+        this.navigate(window.location.pathname);
+    }
 
-    this.navigate = function(path) {
+    navigate = (path) => {
         // Push to history
         history.pushState({}, "", path);
 
-        this.mainContent = document.querySelector("#main-content");
-        this.mainContent.innerHTML = "";
+        // Clear the main content area
+        const mainContentEl = document.querySelector("#main-content");
+        if (mainContentEl) {
+            mainContentEl.innerHTML = "";
+        }
 
-        this.routes[path]();
+        // Call the route if it exists
+        if (this.routes[path]) {
+            this.routes[path]();
+        }
     }
-
-    this.navigate(window.location.pathname);
-    window.addEventListener("popstate", (e) => {
-        this.navigate(window.location.pathname);
-    });
 }

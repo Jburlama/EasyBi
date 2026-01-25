@@ -27,7 +27,7 @@ fastify.setNotFoundHandler((request, reply) => {
         return reply.code(404).send("Not found");
     }
     if (routes.some(route => route === url)) {
-        return reply.sendFile("html/index.html");
+        return reply.sendFile("index.html");
     }
 
     return reply.code(404).send("Not found");

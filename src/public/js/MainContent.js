@@ -1,34 +1,38 @@
 "use strict"
 
-function MainContent() {
-    this.container = document.createElement("div");
-    this.container.id = "main-content"
-    this.container.style.width = "100%";
-    this.container.style.height = "100vh";
-    this.container.style.overflowX = "hidden";
-    // this.container.style.display = "flex"
-    this.container.style.border = "1px solid red"
+"use strict"
 
-    this.integration = new Integration();
-    this.createIntegration = new CreateIntegrationPage();
+class MainContent {
+    constructor() {
+        this.container = document.createElement("div");
+        this.container.id = "main-content"
+        this.container.style.width = "100%";
+        this.container.style.height = "100vh";
+        this.container.style.overflowX = "hidden";
+        this.container.style.border = "1px solid red"
 
-    window.Container.appendChild(this.container);
+        this.integration = new Integration();
+        this.createIntegration = new CreateIntegrationPage();
 
-    this.clear = function() {
+        window.Container.appendChild(this.container);
+
+    }
+
+    clear = () => {
         this.container.innerHTML = "";
     }
 
-    this.appendChild = function(childContainer) {
+    appendChild = (childContainer) => {
         this.container.appendChild(childContainer)
     }
 
-    this.renderIntegration = () => {
-        this.clear();
+    renderIntegration = () => {
+        this.container.innerHTML = "";
         this.appendChild(this.integration.container)
     }
 
-    this.renderCriarIntegration = () => {
-        this.clear();
+    renderCriarIntegration = () => {
+        this.container.innerHTML = "";
         this.createIntegration.render()
     }
 }
