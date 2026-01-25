@@ -7,8 +7,8 @@ function Integration() {
     this.container.style.height = "100vh";
     this.container.style.overflowX = "hidden";
 
-    this.NavIntegration = new NavIntegration();
-    this.container.appendChild(this.NavIntegration.container);
+    this.IntegrationHeader = new IntegrationHeader();
+    this.container.appendChild(this.IntegrationHeader.container);
 
     this.NavSepLine = new NavSepLine();
     this.container.appendChild(this.NavSepLine.container)
@@ -33,7 +33,7 @@ function IntegrationsDisplay() {
     this.container.style.boxSizing = "border-box";
     this.container.style.overflowY = "auto";
     
-    // Create the empty state message
+    // // Create the empty state message
     this.createEmptyState();
 }
 
@@ -121,7 +121,8 @@ IntegrationsDisplay.prototype.updateDisplay = function(integrations) {
     if (integrations && integrations.length > 0) {
         // Show integrations list
         this.showIntegrationsList(integrations);
-    } else {
+    }
+    else {
         // Show empty state
         this.createEmptyState();
     }
@@ -182,10 +183,10 @@ function NavSepLine() {
     this.container.style.width = "100%";
 }
 
-function NavIntegration() {
+function IntegrationHeader() {
     // Integration NavBar
     this.container = document.createElement("div");
-    this.container.id = "nav-integration";
+    this.container.id = "Integration-header";
     this.container.style.width = "100%";
     this.container.style.height = "80px";
     this.container.style.display = "flex";
@@ -202,6 +203,7 @@ function NavIntegration() {
     this.container.style.minHeight = "80px"; // Ensure consistent height
     this.container.style.marginLeft = "10px";
     this.container.style.marginRight = "10px";
+    this.container.style.overflowX = "hidden";
     
 
     this.createIntegrationBtn = new CreateIntegrationBtn();
@@ -216,7 +218,7 @@ function NavIntegration() {
 }
 
 // Add responsive behavior to NavIntegration
-NavIntegration.prototype.setupResponsiveBehavior = function() {
+IntegrationHeader.prototype.setupResponsiveBehavior = function() {
     const self = this;
     
     this.updateLayout = function() {
@@ -418,6 +420,17 @@ function CreateIntegrationBtn() {
     })
     this.container.addEventListener("mouseleave", () => {
         this.createIntegrationBtn.style.background = "linear-gradient(135deg, rgba(0, 0, 0, 1) 0%, rgba(100, 100, 100, 1) 90%)";
+    })
+
+    // In CreateIntegrationBtn function, update the click event:
+    this.container.addEventListener("click", () => {
+        if (window.router) {
+            window.router.navigate("/criar-integracao");
+        } else {
+            // Fallback if router isn't available
+            history.pushState({}, "", "/criar-integracao");
+            window.dispatchEvent(new PopStateEvent('popstate'));
+        }
     })
 }
 
