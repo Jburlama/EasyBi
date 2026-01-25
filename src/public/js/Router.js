@@ -4,9 +4,8 @@ class Router {
     constructor() {
         this.routes = {};
         
-        window.addEventListener("popstate", (e) => {
-            this.navigate(window.location.pathname);
-        });
+        // Don't navigate immediately
+        window.addEventListener("popstate", this.#popstate);
     }
     
     registerRoutes(mainContent) {
@@ -21,18 +20,30 @@ class Router {
     }
 
     navigate = (path) => {
-        // Push to history
+        if (window.location.pathname === path) {
+            return ;
+        }
+
         history.pushState({}, "", path);
 
-        // Clear the main content area
         const mainContentEl = document.querySelector("#main-content");
         if (mainContentEl) {
             mainContentEl.innerHTML = "";
         }
 
-        // Call the route if it exists
         if (this.routes[path]) {
             this.routes[path]();
         }
+    }
+
+    #popstate = (event) => {
+            const mainContentEl = document.querySelector("#main-content");
+            if (mainContentEl) {
+                mainContentEl.innerHTML = "";
+            }
+            const path = window.location.pathname
+            if (this.routes[path]) {
+                this.routes[path]();
+            }
     }
 }
