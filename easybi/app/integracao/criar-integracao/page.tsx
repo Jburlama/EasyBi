@@ -7,6 +7,15 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Upload } from "lucide-react";
 import Link from "next/link";
 
+interface InputInfo {
+    label: string;
+    placeholder: string;
+}
+
+interface BtnInfo {
+    name: string;
+    variant: "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
+}
 
 export default function CriarIntegracao() {
     return (
@@ -24,62 +33,56 @@ export default function CriarIntegracao() {
     );
 }
 
-
 function CriarIntegracaoContent() {
-    const inputInfo = [
-        {
-            label: "Nome da Integração", placeholder: "Ex: Salesforce"
-        },
-        {
-            label: "Telefone", placeholder: "(00) 00000-0000"
-        },
-        {
-            label: "CNPJ", placeholder: "00.000.000/0000-00"
-        },
-        {
-            label: "E-mail", placeholder: "contato@exemplo.com"
-        },
-    ]
+    const inputInfo: InputInfo[] = [
+        { label: "Nome da Integração", placeholder: "Ex: Salesforce" },
+        { label: "Telefone", placeholder: "(00) 00000-0000" },
+        { label: "CNPJ", placeholder: "00.000.000/0000-00" },
+        { label: "E-mail", placeholder: "contato@exemplo.com" },
+    ];
 
-    const btnInfo = [
-        {
-            name: "Cancelar", variant: "outline",
-        },
-        {
-            name: "Criar Integração", variant: "submit",
-        },
-    ]
+    const btnInfo: BtnInfo[] = [
+        { name: "Cancelar", variant: "outline" },
+        { name: "Criar Integração", variant: "default" },
+    ];
 
     return (
         <CardContent className="space-y-6">
             <CriarIntegracaoLogo />
-            <CriarIntegracaoInput info={inputInfo[0]}/>
+            <CriarIntegracaoInput info={inputInfo[0]} />
             <CriarIntegracaoInput info={inputInfo[1]} />
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <CriarIntegracaoInput info={inputInfo[2]}/>
+                <CriarIntegracaoInput info={inputInfo[2]} />
                 <CriarIntegracaoInput info={inputInfo[3]} />
             </div>
             <div className="flex justify-end gap-2 pt-4">
                 <Link href="/integracao">
-                    <CriarIntegracaoBtnDeAcao info={btnInfo[0]}/>
+                    <CriarIntegracaoBtnDeAcao info={btnInfo[0]} />
                 </Link>
-                <CriarIntegracaoBtnDeAcao info={btnInfo[1]}/>
+                <CriarIntegracaoBtnDeAcao info={btnInfo[1]} />
             </div>
         </CardContent>
-    )
+    );
 }
 
-function CriarIntegracaoBtnDeAcao({ info }) {
+function CriarIntegracaoBtnDeAcao({ info }: { info: BtnInfo }) {
     return (
-        <Button 
-            variant={info.variant}
-            className="hover:cursor-pointer"
-        >
-            { info.name }
+        <Button variant={info.variant} className="hover:cursor-pointer">
+            {info.name}
         </Button>
-    )
+    );
 }
 
+function CriarIntegracaoInput({ info }: { info: InputInfo }) {
+    const id = info.label.toLowerCase().replace(/\s+/g, "-");
+
+    return (
+        <div className="space-y-2">
+            <Label htmlFor={id}>{info.label}</Label>
+            <Input id={id} placeholder={info.placeholder} />
+        </div>
+    );
+}
 
 function CriarIntegracaoLogo() {
     return (
@@ -99,14 +102,6 @@ function CriarIntegracaoLogo() {
                 </Button>
             </div>
         </div>
-    )
+    );
 }
 
-function CriarIntegracaoInput({ info }) {
-    return (
-        <div className="space-y-2">
-            <Label >{info.label}</Label>
-            <Input id={info.label.toLower} placeholder={info.placeholder} />
-        </div>
-    )
-}
