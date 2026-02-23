@@ -2,16 +2,25 @@ import {
     SidebarMenuItem,
     SidebarMenuButton,
 } from "@/components/ui/sidebar";
-
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-
 import Link from "next/link";
+import { ReactNode } from "react";
 
-export default function SidebarItem({ navInfo }) {
+export interface NavItem {
+  title: string;
+  href: string;
+  icon: ReactNode;
+}
+
+interface SidebarItemProps {
+  navInfo: NavItem;
+}
+
+export default function SidebarItem({ navInfo }: SidebarItemProps) {
     return (
         <SidebarMenuItem>
             <Tooltip>

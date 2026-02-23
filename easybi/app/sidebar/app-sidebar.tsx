@@ -16,10 +16,10 @@ import {
     LayoutDashboard
 } from "lucide-react";
 import EasyBiLogo from "./EasyBi-logo";
-import SidebarItem from "./SidebarItem";
+import SidebarItem, { NavItem } from "./SidebarItem";
 
 export function AppSidebar() {
-    const navInfo = [
+    const navInfo: NavItem[] = [
         {
             title: "Integrações",
             href: "/integracao",
@@ -36,7 +36,7 @@ export function AppSidebar() {
             icon: <RefreshCw className="h-5 w-5" />
         },
         {
-            title: "Fashboards",
+            title: "Dashboards",
             href: "/dashboards",
             icon: <LayoutDashboard className="h-5 w-5" />
         },
@@ -54,7 +54,10 @@ export function AppSidebar() {
                         {
                             navInfo.map((data) => {
                                 return (
-                                    <SidebarItem navInfo={data}/>
+                                    <SidebarItem
+                                        key={`nav-${data.href}`}
+                                        navInfo={data}
+                                    />
                                 )
                             })
                         }
