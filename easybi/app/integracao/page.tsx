@@ -2,27 +2,7 @@ import Header from "../header/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus, Search } from "lucide-react";
-
-function NovaIntegracaoBtn() {
-    return (
-        <Button
-            className="hover:cursor-pointer"
-            size="sm"
-        >
-            <Plus className="h-4 w-4 mr-2" />
-            Nova Integração
-        </Button>
-    );
-}
-
-function IntegracaoCard() {
-    return (
-        <div className="border rounded-lg p-4 shadow-sm">
-            <h3 className="font-medium">Integração Exemplo</h3>
-            <p className="text-sm text-muted-foreground">Detalhes da integração...</p>
-        </div>
-    )
-}
+import Link from "next/link";
 
 export default function Integracao() {
     const integracaoCount = Array(20).fill({});
@@ -57,3 +37,27 @@ export default function Integracao() {
         </>
     );
 }
+
+function NovaIntegracaoBtn() {
+    return (
+        <Link href="/integracao/criar-integracao">
+            <Button
+                className="hover:cursor-pointer"
+                size="sm"
+            >
+                <Plus className="h-4 w-4 mr-2" />
+                Nova Integração
+            </Button>
+        </Link>
+    );
+}
+
+function IntegracaoCard() {
+    return (
+        <div className="border rounded-lg p-4 shadow-sm">
+            <h3 className="font-medium">Integração Exemplo</h3>
+            <p className="text-sm text-muted-foreground">Detalhes da integração...</p>
+        </div>
+    )
+}
+
