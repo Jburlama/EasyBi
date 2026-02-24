@@ -16,7 +16,7 @@ services:
 
   # app:
   #   build: .
-  #   container_name: nextjs-financial
+  #   container_name: EasyBi-nextjs
   #   ports:
   #     - "3000:3000"
   #   environment:
