@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Header from "../../header/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +22,43 @@ interface BtnInfo {
 }
 
 export default function CriarIntegracao() {
+    const [formData, setFormData] = useState({
+        name: "",
+        phone: "",
+        cnpj: "",
+        email: "",
+        logo: "",
+    });
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+            const res = await fetch("/api/integrations", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+            if (res.ok) {
+                router.push("/integracao"); // redirect after success
+            } else {
+                // handle error
+                console.error("Failed to create");
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Update state when inputs change
+    const handleChange = (field: string, value: string) => {
+        setFormData((prev) => ({ ...prev, [field]: value }));
+    };
+
     return (
         <>
             <Header title="Criar Integração" />
@@ -26,7 +67,12 @@ export default function CriarIntegracao() {
                     <CardHeader>
                         <CardTitle>Nova Integração</CardTitle>
                     </CardHeader>
-                    <CriarIntegracaoContent />
+                    <form onSubmit={handleSubmit}>
+                        <CriarIntegracaoContent 
+                            formData={formData} 
+                            onChange={handleChange} 
+                        />
+                    </form>
                 </Card>
             </main>
         </>
